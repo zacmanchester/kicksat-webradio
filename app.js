@@ -5,7 +5,6 @@ var querystring = require("querystring");
 var fs = require("fs");
 var exec = require("child_process").exec;
 var formidable = require("formidable");
-//var moment = require("moment");
 
 //Load HTML from disk
 var radioPage = fs.readFileSync("html/radio.html");
@@ -75,7 +74,8 @@ function demod(request, response) {
 							if(sampleRateLine == "sample rate: 192000" || sampleRateLine == "sample rate: 250000" || sampleRateLine == "sample rate: 256000") {
 								//File is a valid .wav with correct sample rate
 								response.end("Your file looks good. We'll get to work demodulating it and email you the results. Thanks!");
-							} else {
+							}
+							else {
 								//File is a valid .wav with bad sample rate
 								response.end("Sorry, this website is only set up to handle .wav files with a sample rated of 192KHz, 250KHz, or 256KHzß. Email us if you need help.");
 							}

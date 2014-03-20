@@ -40,9 +40,11 @@
             }
         </style>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
         <script type="text/javascript">
 
             document.addEventListener("DOMContentLoaded", function(){
+                document.getElementById("dateTimeIn").value = moment().format("MM/DD/YYYY hh:mm A")
                 document.forms["uploadForm"].onsubmit = function() {
                     console.log("Form Submitted");
                     document.getElementById("status").innerHTML="Uploading ..";
@@ -88,14 +90,15 @@
 
         <div style="text-align: center;"><a href="http://zacinaction.github.io/kicksat/"><img style="width: 600px; height: 224px;" alt="KickSat" src="http://zacinaction.github.io/kicksat/kicksatlogo_600.png"></a></div>
 
-        <h2>For information on using this website, visit the <a href="https://github.com/zacinaction/kicksat/wiki">project wiki</a>.</h2>
+        <h2>For technical information visit the <a href="https://github.com/zacinaction/kicksat/wiki">project wiki</a>.</h2>
+        <h2>If you have questions, post them on our <a href="https://groups.google.com/forum/#!forum/kicksat-gs">Google Group</a>.</h2>
 
         <h1>Sprite Recording Upload:</h1>
 
         <form name="uploadForm" method="post" enctype="multipart/form-data" action="/demod">
             Select your .wav file: <input type="file" name="upload" required></input>
             </br>Email: <input type="email" size=25></input> (If you want us to send you the decoding results)
-            </br>Local date and time at start of recording: <input type="text" value="mm/dd/yyyy hh:mm AM/PM" size=28 required></input>
+            </br>Local date and time at start of recording: <input type="text" id="dateTimeIn" size=28 required></input> (Please correct this as needed)
             </br>Latitude: <input type="text" id="latIn" size=4 required></input>&deg Longitude: <input type="text" id="lonIn" size=4 required></input>&deg (Just click on the map to get these values)
             <input type="submit" value="Submit" style="float: right;"></input>
             <div id="map-canvas" style="height: 380px"></div>
