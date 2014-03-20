@@ -72,7 +72,7 @@
                     lonString = event.latLng.lng().toFixed(1);
                     document.getElementById("latIn").value = latString;
                     document.getElementById("lonIn").value = lonString;
-                    var html = 'Lat = ' + latString  + '&deg Lon = ' + lonString + '&deg';
+                    var html = '<div>Lat = ' + latString  + '&deg Lon = ' + lonString + '&deg</div>';
                     infoWindow.setContent(html);
                     infoWindow.setPosition(event.latLng);
                     infoWindow.open(map);
