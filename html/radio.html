@@ -2,7 +2,16 @@
     <head>
         <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
         <link rel="icon" type="image/png" href="http://zacinaction.github.io/kicksat/favicon.png" />
+        <style>
+            html, body, #map-canvas {
+                height: 100%;
+                margin: 0px;
+                padding: 0px
+            }
+        </style>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
         <script type="text/javascript">
+
             document.addEventListener("DOMContentLoaded", function(){
                 document.forms["uploadForm"].onsubmit = function() {
                     console.log("Form Submitted");
@@ -13,13 +22,43 @@
                         }, 333);
                 }
             }, false);
+
+            var latString = ' ';
+            var lonString = ' ';
+
+            function initialize() {
+                var mapOptions = {
+                    zoom: 2,
+                    center: new google.maps.LatLng(20.0, -30.0)
+                };
+                
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+                var infoWindow = new google.maps.InfoWindow();
+                google.maps.event.addListener(map, 'click', function(event) {
+                    latString = event.latLng.lat().toFixed(1);
+                    lonString = event.latLng.lng().toFixed(1);
+                    document.getElementById("latIn").value = latString;
+                    document.getElementById("lonIn").value = lonString;
+                    var html = 'Lat = ' + latString  + '&deg Lon = ' + lonString + '&deg';
+                    infoWindow.setContent(html);
+                    infoWindow.setPosition(event.latLng);
+                    infoWindow.open(map);
+                });
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
         </script>
     </head>
     <body>
         <form name="uploadForm" method="post" enctype="multipart/form-data" action="/demod">
-            <input type="file" name="upload"></input>
-            <input type="submit" value="Upload"></input>
-            </br>Email: <input type="email">
+            Select your .wav file: <input type="file" name="upload" required></input>
+            </br>Email: <input type="email" size=25></input> (If you want us to send you the decoding results)
+            </br>Local date and time at start of recording: <input type="text" value="mm/dd/yyyy hh:mm AM/PM" size=28 required></input>
+            </br>Latitude: <input type="text" id="latIn" size=4 required></input>&deg Longitude: <input type="text" id="lonIn" size=4 required></input>&deg (Just click on the map to get these values)
+            <div id="map-canvas" style="width: 640px; height: 360px"></div>
+            <input type="submit" value="Submit"></input>
         </form>
         <p id="status"></p>
     </body>

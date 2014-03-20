@@ -72,12 +72,13 @@ function demod(request, response) {
 						var lines = stdout.split('\n');
 
 						if(lines[1].trim() == "riff: 'RIFF'" && lines[3].trim() == "wave: 'WAVE'") {
-							if(lines[8].trim() == "sample rate: 250000") {
+							sampleRateLine = lines[8].trim();
+							if(sampleRateLine == "sample rate: 192000" || sampleRateLine == "sample rate: 250000" || sampleRateLine == "sample rate: 256000") {
 								//File is a valid .wav with correct sample rate
 								response.end("Your file looks good. We'll get to work demodulating it and email you the results. Thanks!");
 							} else {
 								//File is a valid .wav with bad sample rate
-								response.end("Sorry, this website is only set up to handle .wav files with a sample rate of 250KHz. Email us if you need help.");
+								response.end("Sorry, this website is only set up to handle .wav files with a sample rated of 192KHz, 250KHz, or 256KHzß. Email us if you need help.");
 							}
 						}
 						else {
