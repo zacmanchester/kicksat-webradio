@@ -8,7 +8,6 @@ var formidable = require("formidable");
 //var moment = require("moment");
 
 //Load HTML from disk
-var indexPage = fs.readFileSync("html/index.html");
 var radioPage = fs.readFileSync("html/radio.html");
 var demodPage = fs.readFileSync("html/demod.html");
 
@@ -39,8 +38,8 @@ function onRequest(request, response) {
 var server = http.createServer(onRequest).listen(8888);
 
 function index(request, response) {
-	response.writeHead(200, {"Content-Type": "text/html"});
-	response.write(indexPage);
+	//This is a temporary redirect to the GitHub info page
+	response.writeHead(307, {"location": "http://zacinaction.github.io/kicksat/"});
 	response.end();
 }
 

@@ -3,7 +3,37 @@
         <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
         <link rel="icon" type="image/png" href="http://zacinaction.github.io/kicksat/favicon.png" />
         <style>
-            html, body, #map-canvas {
+            body {
+                font-family: Helvetica,Arial,FreeSans,san-serif;
+                margin-top: 1em;
+                color: #000000;
+                background-color: #ffffff;
+             }
+
+            h1 {
+                font-size: 1.3em;
+                color: #4b22b4;
+            }
+
+            h2 {
+                font-size: 1.1em;
+                text-align: center;
+            }
+
+            p {
+                text-align: justify;
+            }
+
+            a {
+                color: #4b22b4;
+            }
+
+            #container {
+                margin: 0 auto;
+                width: 700px;
+            }
+
+            #map-canvas {
                 height: 100%;
                 margin: 0px;
                 padding: 0px
@@ -52,14 +82,26 @@
         </script>
     </head>
     <body>
+        <a href="https://github.com/zacinaction/kicksat-groundstation"><img style="border: 0pt none ; position: absolute; top: 0pt; right: 0pt;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+        <div id="container">
+
+        <div style="text-align: center;"><a href="http://zacinaction.github.io/kicksat/"><img style="width: 600px; height: 224px;" alt="KickSat" src="http://zacinaction.github.io/kicksat/kicksatlogo_600.png"></a></div>
+
+        <h2>For information on using this website, visit the <a href="https://github.com/zacinaction/kicksat/wiki">project wiki</a>.</h2>
+
+        <h1>Sprite Recording Upload:</h1>
+
         <form name="uploadForm" method="post" enctype="multipart/form-data" action="/demod">
             Select your .wav file: <input type="file" name="upload" required></input>
             </br>Email: <input type="email" size=25></input> (If you want us to send you the decoding results)
             </br>Local date and time at start of recording: <input type="text" value="mm/dd/yyyy hh:mm AM/PM" size=28 required></input>
             </br>Latitude: <input type="text" id="latIn" size=4 required></input>&deg Longitude: <input type="text" id="lonIn" size=4 required></input>&deg (Just click on the map to get these values)
-            <div id="map-canvas" style="width: 640px; height: 360px"></div>
-            <input type="submit" value="Submit"></input>
+            <input type="submit" value="Submit" style="float: right;"></input>
+            <div id="map-canvas" style="height: 380px"></div>
         </form>
         <p id="status"></p>
+        
+        </div>
     </body>
 </html>
