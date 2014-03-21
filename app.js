@@ -1,6 +1,7 @@
 //Import Dependencies
 var http = require("http");
 var url = require("url");
+var util = require("util");
 var querystring = require("querystring");
 var fs = require("fs");
 var exec = require("child_process").exec;
@@ -67,11 +68,11 @@ function demod(request, response) {
 
 			var fileDir = "/home/zacman/RadioUploads/"+files.upload.hash;
 			var filePath = fileDir+"/Recording.wav";
+			var infoPath = fileDir+"/Info.txt";
 			fs.exists(filePath, function(exists) {
 				if(!exists) {
 					if(files.upload.path.substr(-4,4) == ".wav") {
 						//Copy the .wav file and check it's validity with qwavheaderdump
-						console.log(fields);
 						exec("mkdir -p "+fileDir+" && cp "+files.upload.path+" "+filePath+" && "+"qwavheaderdump -F "+filePath, function(error, stdout, stderr) {
 
 							var lines = stdout.split('\n');
@@ -82,6 +83,9 @@ function demod(request, response) {
 									//File is a valid .wav with correct sample rate
 									response.write("<h1>Upload Successful!</h1> <h2>Your file looks good. We'll get to work demodulating it and email you the results. Thanks!</h2>");
 									response.end("\n</div>\n</body>\n</html>");
+									fs.appendFile(infoPath, util.inspect({fields: fields, files: files}), function(err){
+										console.log(err);
+									});
 								}
 								else {
 									//File is a valid .wav with bad sample rate

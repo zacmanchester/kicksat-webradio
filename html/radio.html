@@ -33,6 +33,11 @@
                 width: 700px;
             }
 
+            #uploadForm {
+            	margin: 0px;
+            	padding: 0px;
+            }
+
             #map-canvas {
                 height: 100%;
                 margin: 0px;
@@ -100,14 +105,14 @@
 
         <h1>Sprite Recording Upload:</h1>
 
-        <form name="uploadForm" method="post" enctype="multipart/form-data" action="/demod">
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/demod">
             Select your .wav file: <input type="file" name="upload" required></input>
-            </br>Email: <input type="email" size=25 autocomplete="on"></input> (If you want us to send you the decoding results)
-            </br>Local date and time at start of recording: <input type="text" id="dateTimeIn" size=28 required></input> (Correct as needed)
-            </br>Latitude: <input type="text" id="latIn" size=4 required></input>&deg Longitude: <input type="text" id="lonIn" size=4 required></input>&deg (Just click on the map to get these values)
+            </br>Email: <input type="email" name="email" size=25 autocomplete="on"></input> (If you want us to send you the decoding results)
+            </br>Local date and time at start of recording: <input type="text" name="date" id="dateTimeIn" size=28 required></input> (Correct as needed)
+            </br>Latitude: <input type="text" name="lat" id="latIn" size=4 required></input>&deg Longitude: <input type="text" name="lon" id="lonIn" size=4 required></input>&deg (Just click on the map to get these values)
             <input type="submit" value="Submit" style="float: right;"></input>
-            <div id="map-canvas" style="height: 380px"></div>
         </form>
+        <div id="map-canvas" style="height: 380px"></div>
         <p id="status"></p>
         
         </div>
