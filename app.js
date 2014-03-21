@@ -49,55 +49,70 @@ function radio(request, response) {
 }
 
 function demod(request, response) {
-	response.writeHead(200, {"Content-Type": "text/html"});
-	response.write("Upload Successful!</br>");
-
 	var form = new formidable.IncomingForm();
 	form.keepExtensions = true;
 	form.hash = 'sha1';
 	form.uploadDir = "/tmp";
 	form.parse(request, function(error, fields, files) {
-		//Copy file to permanent location, fix any .wav format issues, then run receiver
-		var fileDir = "/home/zacman/RadioUploads/"+files.upload.hash;
-		var filePath = fileDir+"/Recording.wav";
-		fs.exists(filePath, function(exists) {
-			if(!exists) {
-				if(files.upload.path.substr(-4,4) == ".wav") {
-					//Copy the .wav file and check it's validity with qwavheaderdump
-					console.log(fields);
-					exec("mkdir -p "+fileDir+" && cp "+files.upload.path+" "+filePath+" && "+"qwavheaderdump -F "+filePath, function(error, stdout, stderr) {
+		if(!files.upload)
+		{
+			//Redirect to the radio page if there is no form data
+			response.writeHead(307, {"location": "/radio"});
+			response.end();
+		}
+		else
+		{
+			response.writeHead(200, {"Content-Type": "text/html"});
+			response.write(demodPage);
 
-						var lines = stdout.split('\n');
+			var fileDir = "/home/zacman/RadioUploads/"+files.upload.hash;
+			var filePath = fileDir+"/Recording.wav";
+			fs.exists(filePath, function(exists) {
+				if(!exists) {
+					if(files.upload.path.substr(-4,4) == ".wav") {
+						//Copy the .wav file and check it's validity with qwavheaderdump
+						console.log(fields);
+						exec("mkdir -p "+fileDir+" && cp "+files.upload.path+" "+filePath+" && "+"qwavheaderdump -F "+filePath, function(error, stdout, stderr) {
 
-						if(lines[1].trim() == "riff: 'RIFF'" && lines[3].trim() == "wave: 'WAVE'") {
-							sampleRateLine = lines[8].trim();
-							if(sampleRateLine == "sample rate: 192000" || sampleRateLine == "sample rate: 250000" || sampleRateLine == "sample rate: 256000") {
-								//File is a valid .wav with correct sample rate
-								response.end("Your file looks good. We'll get to work demodulating it and email you the results. Thanks!");
+							var lines = stdout.split('\n');
+
+							if(lines[1].trim() == "riff: 'RIFF'" && lines[3].trim() == "wave: 'WAVE'") {
+								sampleRateLine = lines[8].trim();
+								if(sampleRateLine == "sample rate: 192000" || sampleRateLine == "sample rate: 250000" || sampleRateLine == "sample rate: 256000") {
+									//File is a valid .wav with correct sample rate
+									response.write("<h1>Upload Successful!</h1> <h2>Your file looks good. We'll get to work demodulating it and email you the results. Thanks!</h2>");
+									response.end("\n</div>\n</body>\n</html>");
+								}
+								else {
+									//File is a valid .wav with bad sample rate
+									response.write('<h1>Error:</h1> <h2>Sorry, this website is only set up to handle .wav files with sample rates of 192KHz, 250KHz, or 256KHz. <a href="https://groups.google.com/forum/#!forum/kicksat-gs">Contact us</a> if you need help.</h2>');
+									response.end("\n</div>\n</body>\n</html>");
+									exec("rm -R "+fileDir, function(error, stdout, stderr) {});
+								}
 							}
 							else {
-								//File is a valid .wav with bad sample rate
-								response.end("Sorry, this website is only set up to handle .wav files with a sample rated of 192KHz, 250KHz, or 256KHzß. Email us if you need help.");
+								//File is not a valid .wav
+								response.write("<h1>Error:</h1> <h2>The file you uploaded is not a valid .wav file. Please try again.</h2>");
+								response.end("\n</div>\n</body>\n</html>");
+								exec("rm -R "+fileDir, function(error, stdout, stderr) {});
 							}
-						}
-						else {
-							//File is not a valid .wav
-							response.end("The file you uploaded is not a valid .wav file. Please try again.");
-							exec("rm -R fileDir", function(error, stdout, stderr) {});
-						}
-					});
+						});
+					}
+					else {
+						//File is not a valid .wav
+						response.write("<h1>Error:</h1> <h2>The file you uploaded is not a valid .wav file. Please try again.</h2>");
+						response.end("\n</div>\n</body>\n</html>");
+						exec("rm -R "+fileDir, function(error, stdout, stderr) {});
+					}
 				}
 				else {
-					//File is not a valid .wav
-					response.end("The file you uploaded is not a valid .wav file. Please try again.");
-					exec("rm -R fileDir", function(error, stdout, stderr) {});
+					//Duplicate file upload
+					response.write("<h1>Error:</h1> <h2>It looks you've already uploaded this file.<br>We'll email you when we finish demodulating it.</h2>");
+					response.end("\n</div>\n</body>\n</html>");
 				}
-			}
-			else {
-				//Duplicate file upload
-				response.end("It looks you've already uploaded this file. We'll email you when we finish demodulating it.");
-			}
-		});
+			});
+		}
+		
 	});
 }
 
